@@ -1,37 +1,35 @@
 <main class="main">
   <section>
     <form action="">
-      <label for="search-input">Cocktail Finder</label>
+      <label for="input-search">Cocktail Finder</label>
       <input
         type="text"
         name=""
-        id="search-input"
+        id="input-search"
+        class="input-search js-input-search"
         placeholder="insert your cocktail"
       />
-      <button type="button">SEARCH</button>
-      <button type="reset">RESET</button>
+      <input type="button" value="SEARCH" class="btn-search js-btn-search" />
+      <input type="button" value="RESET" class="btn-reset js-btn-reset" />
     </form>
-
-    <h2>My search list</h2>
-    <ul>
-      <li>
-        <article>
-          <h3></h3>
-          <img src="" alt="" />
-        </article>
-      </li>
-    </ul>
   </section>
 
-  <section>
-    <h2>My favorite cocktails</h2>
-    <ul>
-      <li>
-        <article>
-          <h3></h3>
-          <img src="" alt="" />
-        </article>
-      </li>
-    </ul>
+  <section class="lists">
+    <div class="result">
+      <h2>My search results</h2>
+      <ul class="result-list js-result-list"></ul>
+    </div>
+
+    <div class="favorites">
+      <h2>My favorite cocktails</h2>
+      <ul>
+        <li>
+          <article>
+            <h3></h3>
+            <img src="" alt="" />
+          </article>
+        </li>
+      </ul>
+    </div>
   </section>
 </main>
