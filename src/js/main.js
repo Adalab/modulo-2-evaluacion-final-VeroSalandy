@@ -8,13 +8,11 @@
 // 3: Guardar los favoritos de la usuaria
 // //   * 1- Crear una lista para los favoritos en el HTML
 //      * 2- Crear una lista de datos de los favoritos: list guarda objetos de resultado.
-//      * 3- Buscar con ese id en el listado de ***palettas que paleta tiene el id del curren target, lo hacemos con un find (devuelve el objeto)
+//      * 3- Buscar con ese id en el listado (original)de ***cockteles que cocktail tiene el id del curren target, lo hacemos con un find (devuelve el/1 objeto)
 //      * 4- La guardo en el listado de favoritos: push
 //      * 5- Pintar en el listado HTML de favoritos: renderFavoritos innerHTML, ¿se puede reutilizar algun función que ya tenemos?
 //      * 6 - Comprobar si ya existe (findIndex) y lo elimino de la lista de favoritos (splice)
 //      * * */
-
-//Buscar con ese id en el listado de palettas que paleta tiene el id del curren target, lo hacemos con un find (devuelve el objeto)
 
 //4: Almacenamiento local con local storage
 
@@ -28,63 +26,71 @@ const url =
 const inputSearch = document.querySelector('.js-input-search');
 const btnSearch = document.querySelector('.js-btn-search');
 
-let resultListDataMargarita = [];
-let resultListDataCocktails = [];
+let resultListData = [];
+//let resultListDataCocktails = [];
 
 //fetch para obtener (default)datos que serian (margaritas)
 fetch(url)
     .then((response) => response.json())
     .then((data) => {
     //console.log(data);
-    resultListDataMargarita = data.drinks;
+    resultListData = data.drinks;
     //console.log(resultListData);
     renderResult(resultList);
   });
 
-//Pintarlos en el HTML cockteles margaritas
+//funcion Pintarlos en el HTML cockteles
 function renderResult(cocktail) {
-     resultList.innerHTML = '';// dejar esto?
-    for (const eachcocktail of resultListDataMargarita) {
-    cocktail.innerHTML += `<li>
-    <article class="cocktail">
-    <h3 class="cocktail-title">${eachcocktail.strDrink}</h3>
-    <img class="cocktail-image" src=${eachcocktail.strDrinkThumb} alt="image of cocktail" />
-    </article>
-    </li>`;
-  }
-}
-
-function renderResultAll(cocktail) {
     resultList.innerHTML = '';
-    for (const eachcocktail of resultListDataCocktails) {
-    cocktail.innerHTML += `<li>
+    for (const eachCocktail of resultListData) {
+    cocktail.innerHTML += `<li class="js-li-cocktail list-cocktail" id=${eachCocktail.idDrink}>
     <article class="cocktail">
-    <h3 class="cocktail-title">${eachcocktail.strDrink}</h3>
-    <img class="cocktail-image" src=${eachcocktail.strDrinkThumb} alt="image of cocktail" />
+    <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
+    <img class="cocktail-image" src=${eachCocktail.strDrinkThumb} alt="image of cocktail" />
     </article>
     </li>`;
   }
+  addEventToCocktail();
 }
 
 
-//funcion manejadora handleinput
+//funcion manejadora handlelickBtnSearch
 function handleClickBtnSearch(ev){
     ev.preventDefault();
     fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputSearch.value}`)
     .then((response) => response.json())
     .then((data) => {
-    resultListDataCocktails = data.drinks;
-    console.log(resultListDataCocktails);
-    renderResultAll(resultList);
-
-    
-   // const inputSearchValue = inputSearch.value;
-    //inputSearchValue.innerHTML = '';// porque no se borra el input?
-
+    resultListData= data.drinks;
+    //console.log(resultListData);
+    renderResult(resultList);
+   
   });
- 
+}
 
-   // const inputSearchValue = inputSearch.value;
+//funcion para cuando le damos click a uno de los cocktails
+function handleClickOfEachCocktail(ev) {
+  console.log(ev.currentTarget.id);
+  ev.currentTarget.classList.toggle('selected');
+}
+
+//function para cada uno de los li/cocktailes para manejar el addevent listener
+function addEventToCocktail(){
+const liElementsList = document.querySelectorAll('.js-li-cocktail');
+//console.log(liElementsList);
+for (const eachLi of liElementsList) {
+  eachLi.addEventListener('click', handleClickOfEachCocktail);
+ }
+}
+
+btnSearch.addEventListener('click', handleClickBtnSearch);
+
+
+
+
+
+// const inputSearchValue = inputSearch.value;
+    //inputSearchValue.innerHTML = '';// porque no se borra el input?
+// const inputSearchValue = inputSearch.value;
 
     //if(inputSearchValue ===''){
 
@@ -92,7 +98,3 @@ function handleClickBtnSearch(ev){
     //     
     // };
     //console.log(btnSearch);
-}
-
-
-btnSearch.addEventListener('click', handleClickBtnSearch);
