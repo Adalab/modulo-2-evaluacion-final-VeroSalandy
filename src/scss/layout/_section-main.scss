@@ -15,13 +15,18 @@
     margin: 10px 0 10px 10px;
 }
 
-.cocktail{
+.cocktail {
     padding: 15px;
+
 }
+
 .cocktail-image {
     width: 200px;
     height: 200px;
+    padding-top: 8px;
 }
 .selected {
     background-color: lightpink;
+    color: lightseagreen;
+    font-family: cursive;
 }

@@ -8,7 +8,7 @@
 // 3: Guardar los favoritos de la usuaria
 // //   * 1- Crear una lista para los favoritos en el HTML
 //      * 2- Crear una lista de datos de los favoritos: list guarda objetos de resultado.
-//      * 3- Buscar con ese id en el listado (original)de ***cockteles que cocktail tiene el id del curren target, lo hacemos con un find (devuelve el/1 objeto)
+//      * 3- Buscar con ese id en el listado (original)de ***cockteles que cocktail tiene el id del curren target, lo hacemos con un find (devuelve el primer elemento y solo un elemento ***objeto)
 //      * 4- La guardo en el listado de favoritos: push
 //      * 5- Pintar en el listado HTML de favoritos: renderFavoritos innerHTML, ¿se puede reutilizar algun función que ya tenemos?
 //      * 6 - Comprobar si ya existe (findIndex) y lo elimino de la lista de favoritos (splice)
@@ -21,13 +21,24 @@
 //variables
 
 const resultList = document.querySelector('.js-result-list');
+const favoriteList = document.querySelector('.js-favorite-list');
+
 const url =
   'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita';
 const inputSearch = document.querySelector('.js-input-search');
 const btnSearch = document.querySelector('.js-btn-search');
 
 let resultListData = [];
-//let resultListDataCocktails = [];
+let favoriteListData = [];
+
+
+//buscar en Local Storage y pintarlo en html(que es el favoritelist)
+const storedCocktail = JSON.parse(localStorage.getItem('favoriteCocktail'));
+  if (storedCocktail) {
+    favoriteListData = storedCocktail;
+    renderFavorite(favoriteList);
+  }
+
 
 //fetch para obtener (default)datos que serian (margaritas)
 fetch(url)
@@ -37,14 +48,15 @@ fetch(url)
     resultListData = data.drinks;
     //console.log(resultListData);
     renderResult(resultList);
+  
   });
 
 //funcion Pintarlos en el HTML cockteles
-function renderResult(cocktail) {
+function renderResult(resultList) {
     resultList.innerHTML = '';
     for (const eachCocktail of resultListData) {
-    cocktail.innerHTML += `<li class="js-li-cocktail list-cocktail" id=${eachCocktail.idDrink}>
-    <article class="cocktail">
+    resultList.innerHTML += `<li class="list-cocktail">
+    <article class="cocktail js-art-li-cocktail" id=${eachCocktail.idDrink}>
     <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
     <img class="cocktail-image" src=${eachCocktail.strDrinkThumb} alt="image of cocktail" />
     </article>
@@ -52,7 +64,19 @@ function renderResult(cocktail) {
   }
   addEventToCocktail();
 }
-
+//funcion Pintarlos en lista favorites en el HTML 
+function renderFavorite(favoriteList) {
+    favoriteList.innerHTML = '';
+    for (const eachCocktail of favoriteListData) {
+    favoriteList.innerHTML += `<li class="list-cocktail">
+    <article class="cocktail js-art-li-cocktail" id=${eachCocktail.idDrink}>
+    <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
+    <img class="cocktail-image" src=${eachCocktail.strDrinkThumb} alt="image of cocktail" />
+    </article>
+    </li>`;
+  }
+  //addEventToCocktail();
+}
 
 //funcion manejadora handlelickBtnSearch
 function handleClickBtnSearch(ev){
@@ -62,20 +86,53 @@ function handleClickBtnSearch(ev){
     .then((data) => {
     resultListData= data.drinks;
     //console.log(resultListData);
-    renderResult(resultList);
+     renderResult(resultList);
+      
    
   });
 }
 
 //funcion para cuando le damos click a uno de los cocktails
 function handleClickOfEachCocktail(ev) {
-  console.log(ev.currentTarget.id);
+  //console.log(ev.currentTarget.id);
+
   ev.currentTarget.classList.toggle('selected');
+
+
+  const idSelectedCocktail = ev.currentTarget.id;
+// find; nos devuelve primer elemento que cumpla condicion, aqui es el ID
+  const selectedCocktail = resultListData.find(cocktailItem => cocktailItem.idDrink=== idSelectedCocktail);
+//console.log(selectedCocktail);
+
+//comprobar si ya existe el favorito con findIndex y nos devuelve posicion donde esta el elemento o -1 cuando no esta
+  const indexCocktail = favoriteListData.findIndex(cocktailItem => cocktailItem.idDrink=== idSelectedCocktail);
+  console.log(indexCocktail);
+
+ if(indexCocktail === -1) {//-1 significa que no esta en lista favo
+
+  //guardar ese objeto (que obtuvimos con find) en listado de favoritos(FLData): con push
+  favoriteListData.push(selectedCocktail);
+ 
+ } 
+
+ //else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
+  //favoriteListData.splice(indexCocktail, 1);
+ //} decirdir si utilizo esto ya qye da problemas por el local storage
+
+
+
+ //pintar en el listado de favorits en html
+renderFavorite(favoriteList);
+
+localStorage.setItem('favoriteCocktail', JSON.stringify(favoriteListData));
+
+
+
 }
 
 //function para cada uno de los li/cocktailes para manejar el addevent listener
 function addEventToCocktail(){
-const liElementsList = document.querySelectorAll('.js-li-cocktail');
+const liElementsList = document.querySelectorAll('.js-art-li-cocktail');
 //console.log(liElementsList);
 for (const eachLi of liElementsList) {
   eachLi.addEventListener('click', handleClickOfEachCocktail);
