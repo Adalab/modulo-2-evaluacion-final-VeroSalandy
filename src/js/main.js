@@ -19,14 +19,13 @@
 //console.log('>> Ready to start :)');
 
 //variables
-
-const resultList = document.querySelector('.js-result-list');
-const favoriteList = document.querySelector('.js-favorite-list');
-
 const url =
   'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita';
+const resultList = document.querySelector('.js-result-list');
+const favoriteList = document.querySelector('.js-favorite-list');
 const inputSearch = document.querySelector('.js-input-search');
 const btnSearch = document.querySelector('.js-btn-search');
+const btnReset = document.querySelector('.js-btn-reset')
 
 let resultListData = [];
 let favoriteListData = [];
@@ -34,7 +33,7 @@ let favoriteListData = [];
 
 //buscar en Local Storage y pintarlo en html(que es el favoritelist)
 const storedCocktail = JSON.parse(localStorage.getItem('favoriteCocktail'));
-  if (storedCocktail) {
+  if (storedCocktail !== null) { // tambien lo puede escribir (storedCocktail) solo que es lo mismo
     favoriteListData = storedCocktail;
     renderFavorite(favoriteList);
   }
@@ -87,10 +86,15 @@ function handleClickBtnSearch(ev){
     resultListData= data.drinks;
     //console.log(resultListData);
      renderResult(resultList);
-      
+
+
+     
    
   });
+ 
 }
+
+
 
 //funcion para cuando le damos click a uno de los cocktails
 function handleClickOfEachCocktail(ev) {
@@ -106,7 +110,7 @@ function handleClickOfEachCocktail(ev) {
 
 //comprobar si ya existe el favorito con findIndex y nos devuelve posicion donde esta el elemento o -1 cuando no esta
   const indexCocktail = favoriteListData.findIndex(cocktailItem => cocktailItem.idDrink=== idSelectedCocktail);
-  console.log(indexCocktail);
+  //console.log(indexCocktail);
 
  if(indexCocktail === -1) {//-1 significa que no esta en lista favo
 
@@ -115,19 +119,16 @@ function handleClickOfEachCocktail(ev) {
  
  } 
 
- //else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
-  //favoriteListData.splice(indexCocktail, 1);
- //} decirdir si utilizo esto ya qye da problemas por el local storage
-
+ /*else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
+  favoriteListData.splice(indexCocktail, 1);
+ } //decirdir si utilizo esto ya qye da problemas por el local storage
+*/
 
 
  //pintar en el listado de favorits en html
 renderFavorite(favoriteList);
 
 localStorage.setItem('favoriteCocktail', JSON.stringify(favoriteListData));
-
-
-
 }
 
 //function para cada uno de los li/cocktailes para manejar el addevent listener
@@ -139,12 +140,29 @@ for (const eachLi of liElementsList) {
  }
 }
 
+function handleClickBtnReset(ev){
+  ev.preventDefault();
+  //console.log('hola');
+if(favoriteListData!==null) {
+  
+  favoriteList.innerHTML = '';
+  localStorage.removeItem('favoriteCocktail');
+
+  // como hacer para que la funcion handleClickOfEachCocktail o al pinchar a los cocktails, deje de funcionar despues de darle click al reset 
+
+
+}
+}
 btnSearch.addEventListener('click', handleClickBtnSearch);
 
+btnReset.addEventListener('click', handleClickBtnReset);
 
 
+//1. hacer que valor del input se borre al pinchar boton search
+//2. hacer que al pinchar boton reset, luego al pinchar cocktail no se agregen de nuevo
 
-
+ /*const inputSearchValue = inputSearch.value;
+ inputSearchValue.innerHTML === '';*/
 // const inputSearchValue = inputSearch.value;
     //inputSearchValue.innerHTML = '';// porque no se borra el input?
 // const inputSearchValue = inputSearch.value;
@@ -154,4 +172,3 @@ btnSearch.addEventListener('click', handleClickBtnSearch);
 
     //     
     // };
-    //console.log(btnSearch);
