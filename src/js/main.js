@@ -35,10 +35,13 @@ let favoriteListData = [];
 const storedCocktail = JSON.parse(localStorage.getItem('favoriteCocktail'));
   if (storedCocktail !== null) { // tambien lo puede escribir (storedCocktail) solo que es lo mismo
     favoriteListData = storedCocktail;
+ 
     renderFavorite(favoriteList);
   }
+  
 
 
+//   resultList.classList.add('selected');
 //fetch para obtener (default)datos que serian (margaritas)
 fetch(url)
     .then((response) => response.json())
@@ -69,12 +72,14 @@ function renderFavorite(favoriteList) {
     for (const eachCocktail of favoriteListData) {
     favoriteList.innerHTML += `<li class="list-cocktail">
     <article class="cocktail js-art-li-cocktail" id=${eachCocktail.idDrink}>
+  
     <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
     <img class="cocktail-image" src=${eachCocktail.strDrinkThumb} alt="image of cocktail" />
     </article>
     </li>`;
   }
   //addEventToCocktail();
+   // <i class="fa-sharp fa-solid fa-xmark"></i>,
 }
 
 //funcion manejadora handlelickBtnSearch
@@ -85,6 +90,7 @@ function handleClickBtnSearch(ev){
     .then((data) => {
     resultListData= data.drinks;
     //console.log(resultListData);
+     inputSearch.value = '';
      renderResult(resultList);
 
 
@@ -100,7 +106,7 @@ function handleClickBtnSearch(ev){
 function handleClickOfEachCocktail(ev) {
   //console.log(ev.currentTarget.id);
 
-  ev.currentTarget.classList.toggle('selected');
+
 
 
   const idSelectedCocktail = ev.currentTarget.id;
@@ -116,19 +122,19 @@ function handleClickOfEachCocktail(ev) {
 
   //guardar ese objeto (que obtuvimos con find) en listado de favoritos(FLData): con push
   favoriteListData.push(selectedCocktail);
+    ev.currentTarget.classList.add('selected');
  
  } 
 
- /*else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
+ else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
   favoriteListData.splice(indexCocktail, 1);
- } //decirdir si utilizo esto ya qye da problemas por el local storage
-*/
-
-
+    ev.currentTarget.classList.remove('selected');
+ } 
  //pintar en el listado de favorits en html
 renderFavorite(favoriteList);
 
 localStorage.setItem('favoriteCocktail', JSON.stringify(favoriteListData));
+
 }
 
 //function para cada uno de los li/cocktailes para manejar el addevent listener
@@ -138,37 +144,23 @@ const liElementsList = document.querySelectorAll('.js-art-li-cocktail');
 for (const eachLi of liElementsList) {
   eachLi.addEventListener('click', handleClickOfEachCocktail);
  }
+ 
 }
 
 function handleClickBtnReset(ev){
   ev.preventDefault();
   //console.log('hola');
 if(favoriteListData!==null) {
-  
+  favoriteListData = [];
   favoriteList.innerHTML = '';
   localStorage.removeItem('favoriteCocktail');
-
+ inputSearch.value = '';  
+ 
   // como hacer para que la funcion handleClickOfEachCocktail o al pinchar a los cocktails, deje de funcionar despues de darle click al reset 
-
-
 }
 }
 btnSearch.addEventListener('click', handleClickBtnSearch);
 
 btnReset.addEventListener('click', handleClickBtnReset);
 
-
-//1. hacer que valor del input se borre al pinchar boton search
-//2. hacer que al pinchar boton reset, luego al pinchar cocktail no se agregen de nuevo
-
- /*const inputSearchValue = inputSearch.value;
- inputSearchValue.innerHTML === '';*/
-// const inputSearchValue = inputSearch.value;
-    //inputSearchValue.innerHTML = '';// porque no se borra el input?
-// const inputSearchValue = inputSearch.value;
-
-    //if(inputSearchValue ===''){
-
-
-    //     
-    // };
+ //resultList.classList.add('selected');

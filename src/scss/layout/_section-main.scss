@@ -1,15 +1,39 @@
 .lists {
     display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
     
 }
-// .result {
-//     width: 50vw;
-// }
 
-// .result-list{
-//     width: 20px;
-//     height: 20px;
-// }
+.label-cocktail-finder{
+    height: 50px;
+    font-size: 40px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+    color: $grey;
+}
+.input-search {
+    padding: 10px;
+    border-radius: 20px;
+    margin-left: 15px;
+}
+.btn-search{
+    padding: 8px;
+    border-radius: 20px;
+}
+.btn-reset {
+    padding: 8px;
+    border-radius: 20px;
+}
+
+.list-title{
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px;
+    color: $lightpink;
+}
 
 .list-cocktail{
     margin: 10px 0 10px 10px;
@@ -17,6 +41,9 @@
 
 .cocktail {
     padding: 15px;
+    margin-right: 15px;
+    font-size: 20px;
+    color: $grey
 
 }
 
@@ -24,9 +51,14 @@
     width: 200px;
     height: 200px;
     padding-top: 8px;
+    border-radius: 25px;
+   
 }
+
 .selected {
-    background-color: lightpink;
-    color: lightseagreen;
+    background-color: $lightpink;
+    color: $lightseagreen;
     font-family: cursive;
+    border: solid;
+    border-radius: 15px;
 }
