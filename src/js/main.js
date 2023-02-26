@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // PASOS:
 //  1: obtener datos (default-list=margaritas) y pintarlos en html
@@ -25,7 +25,8 @@ const resultList = document.querySelector('.js-result-list');
 const favoriteList = document.querySelector('.js-favorite-list');
 const inputSearch = document.querySelector('.js-input-search');
 const btnSearch = document.querySelector('.js-btn-search');
-const btnReset = document.querySelector('.js-btn-reset')
+const btnReset = document.querySelector('.js-btn-reset');
+const errorMsj = document.querySelector('.js-error-message');
 
 let resultListData = [];
 let favoriteListData = [];
@@ -33,30 +34,25 @@ let favoriteListData = [];
 
 //buscar en Local Storage y pintarlo en html(que es el favoritelist)
 const storedCocktail = JSON.parse(localStorage.getItem('favoriteCocktail'));
-  if (storedCocktail !== null) { // tambien lo puede escribir (storedCocktail) solo que es lo mismo
-    favoriteListData = storedCocktail;
- 
-    renderFavorite(favoriteList);
-  }
-  
-
-
+if (storedCocktail !== null) { // tambien lo puede escribir (storedCocktail) solo que es lo mismo
+  favoriteListData = storedCocktail;
+  renderFavorite(favoriteList);
+}
 //   resultList.classList.add('selected');
 //fetch para obtener (default)datos que serian (margaritas)
 fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
+  .then((response) => response.json())
+  .then((data) => {
     //console.log(data);
     resultListData = data.drinks;
     //console.log(resultListData);
     renderResult(resultList);
-  
   });
 
 //funcion Pintarlos en el HTML cockteles
 function renderResult(resultList) {
-    resultList.innerHTML = '';
-    for (const eachCocktail of resultListData) {
+  resultList.innerHTML = '';
+  for (const eachCocktail of resultListData) {
     resultList.innerHTML += `<li class="list-cocktail">
     <article class="cocktail js-art-li-cocktail" id=${eachCocktail.idDrink}>
     <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
@@ -66,48 +62,49 @@ function renderResult(resultList) {
   }
   addEventToCocktail();
 }
-//funcion Pintarlos en lista favorites en el HTML 
+
+//funcion Pintarlos en lista favorites en el HTML
 function renderFavorite(favoriteList) {
-    favoriteList.innerHTML = '';
-    for (const eachCocktail of favoriteListData) {
+  favoriteList.innerHTML = '';
+  for (const eachCocktail of favoriteListData) {
     favoriteList.innerHTML += `<li class="list-cocktail">
     <article class="cocktail js-art-li-cocktail" id=${eachCocktail.idDrink}>
-  
     <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
     <img class="cocktail-image" src=${eachCocktail.strDrinkThumb} alt="image of cocktail" />
     </article>
     </li>`;
   }
   //addEventToCocktail();
-   // <i class="fa-sharp fa-solid fa-xmark"></i>,
+// <i class="fa-sharp fa-solid fa-xmark"></i>,
+}
+
+function renderErrorMsj(msj) {
+  errorMsj.innerHTML = msj;
 }
 
 //funcion manejadora handlelickBtnSearch
 function handleClickBtnSearch(ev){
-    ev.preventDefault();
-    fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputSearch.value}`)
+  ev.preventDefault();
+  fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputSearch.value}`)
     .then((response) => response.json())
     .then((data) => {
-    resultListData= data.drinks;
-    //console.log(resultListData);
-     inputSearch.value = '';
-     renderResult(resultList);
-
-
-     
-   
-  });
- 
+      if (inputSearch.value==='') {
+        renderErrorMsj ('Oeps, please insert a cocktail');
+        errorMsj.classList.add('error-message');
+      } else {
+        resultListData= data.drinks;
+//console.log(resultListData);
+        inputSearch.value = '';
+        renderErrorMsj ('');
+        errorMsj.classList.remove('error-message');
+        renderResult(resultList);
+      }
+    });
 }
-
-
 
 //funcion para cuando le damos click a uno de los cocktails
 function handleClickOfEachCocktail(ev) {
   //console.log(ev.currentTarget.id);
-
-
-
 
   const idSelectedCocktail = ev.currentTarget.id;
 // find; nos devuelve primer elemento que cumpla condicion, aqui es el ID
@@ -118,49 +115,47 @@ function handleClickOfEachCocktail(ev) {
   const indexCocktail = favoriteListData.findIndex(cocktailItem => cocktailItem.idDrink=== idSelectedCocktail);
   //console.log(indexCocktail);
 
- if(indexCocktail === -1) {//-1 significa que no esta en lista favo
+  if(indexCocktail === -1) {//-1 significa que no esta en lista favo
 
   //guardar ese objeto (que obtuvimos con find) en listado de favoritos(FLData): con push
-  favoriteListData.push(selectedCocktail);
+    favoriteListData.push(selectedCocktail);
     ev.currentTarget.classList.add('selected');
- 
- } 
+  }
 
- else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
-  favoriteListData.splice(indexCocktail, 1);
+  else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
+    favoriteListData.splice(indexCocktail, 1);
     ev.currentTarget.classList.remove('selected');
- } 
+  }
  //pintar en el listado de favorits en html
-renderFavorite(favoriteList);
+  renderFavorite(favoriteList);
 
-localStorage.setItem('favoriteCocktail', JSON.stringify(favoriteListData));
-
+  localStorage.setItem('favoriteCocktail', JSON.stringify(favoriteListData));
 }
 
 //function para cada uno de los li/cocktailes para manejar el addevent listener
 function addEventToCocktail(){
-const liElementsList = document.querySelectorAll('.js-art-li-cocktail');
+  const liElementsList = document.querySelectorAll('.js-art-li-cocktail');
 //console.log(liElementsList);
-for (const eachLi of liElementsList) {
-  eachLi.addEventListener('click', handleClickOfEachCocktail);
- }
- 
+  for (const eachLi of liElementsList) {
+    eachLi.addEventListener('click', handleClickOfEachCocktail);
+  }
 }
 
 function handleClickBtnReset(ev){
   ev.preventDefault();
   //console.log('hola');
-if(favoriteListData!==null) {
-  favoriteListData = [];
-  favoriteList.innerHTML = '';
-  localStorage.removeItem('favoriteCocktail');
- inputSearch.value = '';  
- 
-  // como hacer para que la funcion handleClickOfEachCocktail o al pinchar a los cocktails, deje de funcionar despues de darle click al reset 
+  if(favoriteListData!==null) {
+    favoriteListData = [];
+    favoriteList.innerHTML = '';
+    localStorage.removeItem('favoriteCocktail');
+    inputSearch.value = '';
+     renderErrorMsj ('');
+     errorMsj.classList.remove('error-message');
+  }
 }
-}
+
 btnSearch.addEventListener('click', handleClickBtnSearch);
 
 btnReset.addEventListener('click', handleClickBtnReset);
 
- //resultList.classList.add('selected');
+//resultList.classList.add('selected');

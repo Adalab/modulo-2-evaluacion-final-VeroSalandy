@@ -28,6 +28,18 @@
     border-radius: 20px;
 }
 
+.error-message {
+    width: 25vw;
+    color: $white;
+    font-size: 18px;
+    font-weight: bold;
+    border: solid 2px $white;
+    border-radius: 25px;
+    background-color: $deeppink;
+    padding: 10px;
+    text-align: center;
+}
+
 .list-title{
     font-size: 30px;
     font-weight: bold;
