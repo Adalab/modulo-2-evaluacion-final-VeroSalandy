@@ -31,10 +31,10 @@ const errorMsj = document.querySelector('.js-error-message');
 let resultListData = [];
 let favoriteListData = [];
 
-
 //buscar en Local Storage y pintarlo en html(que es el favoritelist)
 const storedCocktail = JSON.parse(localStorage.getItem('favoriteCocktail'));
-if (storedCocktail !== null) { // tambien lo puede escribir (storedCocktail) solo que es lo mismo
+if (storedCocktail !== null) {
+  // tambien lo puede escribir (storedCocktail) solo que es lo mismo
   favoriteListData = storedCocktail;
   renderFavorite(favoriteList);
 }
@@ -53,12 +53,24 @@ fetch(url)
 function renderResult(resultList) {
   resultList.innerHTML = '';
   for (const eachCocktail of resultListData) {
-    resultList.innerHTML += `<li class="list-cocktail">
-    <article class="cocktail js-art-li-cocktail" id=${eachCocktail.idDrink}>
-    <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
-    <img class="cocktail-image" src=${eachCocktail.strDrinkThumb} alt="image of cocktail" />
+    const indexCocktail = favoriteListData.findIndex(
+      (eachCocktailFav) => eachCocktail.idDrink === eachCocktailFav.idDrink
+    );
+    if (indexCocktail === -1) {
+      resultList.innerHTML += `<li class='list-cocktail'>
+    <article class='cocktail js-art-li-cocktail' id=${eachCocktail.idDrink}>
+    <h3 class='cocktail-title'>${eachCocktail.strDrink}</h3>
+    <img class='cocktail-image' src=${eachCocktail.strDrinkThumb} alt='image of cocktail' />
     </article>
     </li>`;
+    } else {
+      resultList.innerHTML += `<li class='list-cocktail'>
+    <article class='cocktail js-art-li-cocktail selected' id=${eachCocktail.idDrink}>
+    <h3 class='cocktail-title'>${eachCocktail.strDrink}</h3>
+    <img class='cocktail-image' src=${eachCocktail.strDrinkThumb} alt='image of cocktail' />
+    </article>
+    </li>`;
+    }
   }
   addEventToCocktail();
 }
@@ -67,15 +79,15 @@ function renderResult(resultList) {
 function renderFavorite(favoriteList) {
   favoriteList.innerHTML = '';
   for (const eachCocktail of favoriteListData) {
-    favoriteList.innerHTML += `<li class="list-cocktail">
-    <article class="cocktail js-art-li-cocktail" id=${eachCocktail.idDrink}>
-    <h3 class="cocktail-title">${eachCocktail.strDrink}</h3>
-    <img class="cocktail-image" src=${eachCocktail.strDrinkThumb} alt="image of cocktail" />
+    favoriteList.innerHTML += `<li class='list-cocktail '>
+    <article class='cocktail js-art-li-cocktail' id=${eachCocktail.idDrink}>
+    <i class="fas fa-window-close icon-remove"></i>
+    <h3 class='cocktail-title'>${eachCocktail.strDrink}</h3>
+    <img class='cocktail-image' src=${eachCocktail.strDrinkThumb} alt='image of cocktail' />
     </article>
     </li>`;
   }
   //addEventToCocktail();
-// <i class="fa-sharp fa-solid fa-xmark"></i>,
 }
 
 function renderErrorMsj(msj) {
@@ -83,19 +95,21 @@ function renderErrorMsj(msj) {
 }
 
 //funcion manejadora handlelickBtnSearch
-function handleClickBtnSearch(ev){
+function handleClickBtnSearch(ev) {
   ev.preventDefault();
-  fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputSearch.value}`)
+  fetch(
+    `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${inputSearch.value}`
+  )
     .then((response) => response.json())
     .then((data) => {
-      if (inputSearch.value==='') {
-        renderErrorMsj ('Oeps, please insert a cocktail');
+      if (inputSearch.value === '') {
+        renderErrorMsj('Oeps, please insert a cocktail');
         errorMsj.classList.add('error-message');
       } else {
-        resultListData= data.drinks;
-//console.log(resultListData);
+        resultListData = data.drinks;
+        //console.log(resultListData);
         inputSearch.value = '';
-        renderErrorMsj ('');
+        renderErrorMsj('');
         errorMsj.classList.remove('error-message');
         renderResult(resultList);
       }
@@ -107,50 +121,55 @@ function handleClickOfEachCocktail(ev) {
   //console.log(ev.currentTarget.id);
 
   const idSelectedCocktail = ev.currentTarget.id;
-// find; nos devuelve primer elemento que cumpla condicion, aqui es el ID
-  const selectedCocktail = resultListData.find(cocktailItem => cocktailItem.idDrink=== idSelectedCocktail);
-//console.log(selectedCocktail);
+  // find; nos devuelve primer elemento que cumpla condicion, aqui es el ID
+  const selectedCocktail = resultListData.find(
+    (cocktailItem) => cocktailItem.idDrink === idSelectedCocktail
+  );
+  //console.log(selectedCocktail);
 
-//comprobar si ya existe el favorito con findIndex y nos devuelve posicion donde esta el elemento o -1 cuando no esta
-  const indexCocktail = favoriteListData.findIndex(cocktailItem => cocktailItem.idDrink=== idSelectedCocktail);
+  //comprobar si ya existe el favorito con findIndex y nos devuelve posicion donde esta el elemento o -1 cuando no esta
+  const indexCocktail = favoriteListData.findIndex(
+    (cocktailItem) => cocktailItem.idDrink === idSelectedCocktail
+  );
   //console.log(indexCocktail);
 
-  if(indexCocktail === -1) {//-1 significa que no esta en lista favo
+  if (indexCocktail === -1) {
+    //-1 significa que no esta en lista favo
 
-  //guardar ese objeto (que obtuvimos con find) en listado de favoritos(FLData): con push
+    //guardar ese objeto (que obtuvimos con find) en listado de favoritos(FLData): con push
     favoriteListData.push(selectedCocktail);
     ev.currentTarget.classList.add('selected');
-  }
-
-  else{ // si SI esta en el listado de favoritos, con splice lo puedes eliminar
+  } else {
+    // si SI esta en el listado de favoritos, con splice lo puedes eliminar
     favoriteListData.splice(indexCocktail, 1);
     ev.currentTarget.classList.remove('selected');
   }
- //pintar en el listado de favorits en html
+  //pintar en el listado de favorits en html
   renderFavorite(favoriteList);
 
   localStorage.setItem('favoriteCocktail', JSON.stringify(favoriteListData));
 }
 
 //function para cada uno de los li/cocktailes para manejar el addevent listener
-function addEventToCocktail(){
+function addEventToCocktail() {
   const liElementsList = document.querySelectorAll('.js-art-li-cocktail');
-//console.log(liElementsList);
+  //console.log(liElementsList);
   for (const eachLi of liElementsList) {
     eachLi.addEventListener('click', handleClickOfEachCocktail);
   }
 }
 
-function handleClickBtnReset(ev){
+function handleClickBtnReset(ev) {
   ev.preventDefault();
   //console.log('hola');
-  if(favoriteListData!==null) {
+  if (favoriteListData !== null) {
     favoriteListData = [];
     favoriteList.innerHTML = '';
     localStorage.removeItem('favoriteCocktail');
     inputSearch.value = '';
-     renderErrorMsj ('');
-     errorMsj.classList.remove('error-message');
+    renderErrorMsj('');
+    errorMsj.classList.remove('error-message');
+    renderResult(resultList);
   }
 }
 
@@ -158,4 +177,13 @@ btnSearch.addEventListener('click', handleClickBtnSearch);
 
 btnReset.addEventListener('click', handleClickBtnReset);
 
-//resultList.classList.add('selected');
+// parte que aun me falta por terminar que es la de los iconos
+
+/*function handleClickIconRemove //function para icono que se debe eliminar al hacer click sobre icono
+
+function addEventToIcon() {
+  const iconArray = document.querySelectorAll('.icon-remove');
+  for (const eachIcon of iconArray) {
+    eachIcon.addEventListener('click', handleClickIconRemove);
+  }
+}*/
