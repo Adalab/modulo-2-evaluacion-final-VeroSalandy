@@ -16,8 +16,6 @@
 
 //4: Almacenamiento local con local storage
 
-//console.log('>> Ready to start :)');
-
 //variables
 const url =
   'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita';
@@ -43,9 +41,7 @@ if (storedCocktail !== null) {
 fetch(url)
   .then((response) => response.json())
   .then((data) => {
-    //console.log(data);
     resultListData = data.drinks;
-    //console.log(resultListData);
     renderResult(resultList);
   });
 
@@ -107,7 +103,6 @@ function handleClickBtnSearch(ev) {
         errorMsj.classList.add('error-message');
       } else {
         resultListData = data.drinks;
-        //console.log(resultListData);
         inputSearch.value = '';
         renderErrorMsj('');
         errorMsj.classList.remove('error-message');
@@ -118,20 +113,16 @@ function handleClickBtnSearch(ev) {
 
 //funcion para cuando le damos click a uno de los cocktails
 function handleClickOfEachCocktail(ev) {
-  //console.log(ev.currentTarget.id);
-
   const idSelectedCocktail = ev.currentTarget.id;
   // find; nos devuelve primer elemento que cumpla condicion, aqui es el ID
   const selectedCocktail = resultListData.find(
     (cocktailItem) => cocktailItem.idDrink === idSelectedCocktail
   );
-  //console.log(selectedCocktail);
 
   //comprobar si ya existe el favorito con findIndex y nos devuelve posicion donde esta el elemento o -1 cuando no esta
   const indexCocktail = favoriteListData.findIndex(
     (cocktailItem) => cocktailItem.idDrink === idSelectedCocktail
   );
-  //console.log(indexCocktail);
 
   if (indexCocktail === -1) {
     //-1 significa que no esta en lista favo
@@ -153,7 +144,7 @@ function handleClickOfEachCocktail(ev) {
 //function para cada uno de los li/cocktailes para manejar el addevent listener
 function addEventToCocktail() {
   const liElementsList = document.querySelectorAll('.js-art-li-cocktail');
-  //console.log(liElementsList);
+
   for (const eachLi of liElementsList) {
     eachLi.addEventListener('click', handleClickOfEachCocktail);
   }
@@ -161,7 +152,7 @@ function addEventToCocktail() {
 
 function handleClickBtnReset(ev) {
   ev.preventDefault();
-  //console.log('hola');
+
   if (favoriteListData !== null) {
     favoriteListData = [];
     favoriteList.innerHTML = '';
