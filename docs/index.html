@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cocktail Finder</title>
+    <!-- Google Fonts
+      <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    -->
+    <!-- Icons
+    
+    -->
+
+    <link
+      rel="stylesheet"
+      href="//use.fontawesome.com/releases/v5.0.7/css/all.css"
+    />
+    <!--<script
+      src="https://kit.fontawesome.com/xmark?s=solid&f=sharp.js"
+      crossorigin="anonymous"
+    ></script>-->
+    <link rel="stylesheet" href="./assets/css/main.css" />
+    <link rel="icon" href="./assets/images/favicon.png" />
+  </head>
+
+  <body>
+    <header class="header">
+      <h1>Let's find your cocktail</h1>
+    </header>
+
+    <main class="main">
+      <section>
+        <form action="">
+          <label class="label-cocktail-finder" for="input-search"
+            >Cocktail Finder</label
+          >
+          <input
+            type="text"
+            name=""
+            id="input-search"
+            class="input-search js-input-search"
+            placeholder="insert your cocktail"
+          />
+          <input type="button" value="SEARCH" class="btn-search js-btn-search" />
+          <input type="button" value="RESET" class="btn-reset js-btn-reset" />
+        </form>
+        <p class="js-error-message"></p>
+      </section>
+
+      <section class="lists">
+        <div class="result">
+          <h2 class="list-title">My search results</h2>
+          <ul class="result-list js-result-list"></ul>
+        </div>
+
+        <div class="favorites">
+          <h2 class="list-title">My favorite cocktails</h2>
+          <ul class="favorite-list js-favorite-list"></ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+
+    </footer>
+    <script src="./assets/js/main.js"></script>
+  </body>
+</html>
