@@ -28,6 +28,7 @@ const favoriteList = document.querySelector('.js-favorite-list');
 const inputSearch = document.querySelector('.js-input-search');
 const btnSearch = document.querySelector('.js-btn-search');
 const btnReset = document.querySelector('.js-btn-reset');
+const btnLog = document.querySelector('.js-btn-log');
 const errorMsj = document.querySelector('.js-error-message');
 
 let resultListData = [];
@@ -61,6 +62,7 @@ function renderResult(resultList) {
       resultList.innerHTML += `<li class='list-cocktail'>
     <article class='cocktail js-art-li-cocktail' id=${eachCocktail.idDrink}>
     <h3 class='cocktail-title'>${eachCocktail.strDrink}</h3>
+    <p class='ingredients'>${eachCocktail.strIngredient1}, ${eachCocktail.strIngredient2}, ${eachCocktail.strIngredient3}</p>
     <img class='cocktail-image' src=${eachCocktail.strDrinkThumb} alt='image of cocktail' />
     </article>
     </li>`;
@@ -68,6 +70,7 @@ function renderResult(resultList) {
       resultList.innerHTML += `<li class='list-cocktail'>
     <article class='cocktail js-art-li-cocktail selected' id=${eachCocktail.idDrink}>
     <h3 class='cocktail-title'>${eachCocktail.strDrink}</h3>
+    <p class='ingredients'>${eachCocktail.strIngredient1}, ${eachCocktail.strIngredient2}, ${eachCocktail.strIngredient3}</p>
     <img class='cocktail-image' src=${eachCocktail.strDrinkThumb} alt='image of cocktail' />
     </article>
     </li>`;
@@ -180,9 +183,17 @@ function handleClickBtnReset(ev) {
   }
 }
 
+function handleClickBtnLog(ev) {
+  ev.preventDefault();
+
+  console.log(`Tienes ${favoriteListData.length}`);
+}
+
 btnSearch.addEventListener('click', handleClickBtnSearch);
 
 btnReset.addEventListener('click', handleClickBtnReset);
+
+btnLog.addEventListener('click', handleClickBtnLog);
 
 // parte que aun me falta por terminar que es la de los iconos
 
